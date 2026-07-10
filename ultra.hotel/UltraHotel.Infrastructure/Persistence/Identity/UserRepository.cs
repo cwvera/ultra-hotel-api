@@ -9,11 +9,11 @@ public class UserRepository(UltraHotelDbContext context) : IUserRepository
     /// <inheritdoc />
     public Task<User?> FindByEmailAsync(string email, CancellationToken ct = default) =>
         context.Users.AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower(), ct);
+            .FirstOrDefaultAsync(u => u.Email == email, ct);
 
     /// <inheritdoc />
     public Task<bool> ExistsByEmailAsync(string email, CancellationToken ct = default) =>
-        context.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower(), ct);
+        context.Users.AnyAsync(u => u.Email == email, ct);
 
     /// <inheritdoc />
     public async Task AddAsync(User user, CancellationToken ct = default)

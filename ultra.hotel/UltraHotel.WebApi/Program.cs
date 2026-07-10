@@ -33,4 +33,4 @@ app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers().RequireRateLimiting("general");
-app.Run();
+await app.RunAsync();
