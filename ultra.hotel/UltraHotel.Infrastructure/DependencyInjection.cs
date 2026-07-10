@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using UltraHotel.Application.Features.Notifications.Contracts;
-using UltraHotel.Application.Features.Search.Contracts;
-using UltraHotel.Commons.Contracts;
 using UltraHotel.Application.Features.Auth.Contracts;
 using UltraHotel.Application.Features.Bookings.Contracts;
 using UltraHotel.Application.Features.Hotels.Contracts;
+using UltraHotel.Application.Features.Notifications.Contracts;
 using UltraHotel.Application.Features.Rooms.Contracts;
+using UltraHotel.Application.Features.Search.Contracts;
+using UltraHotel.Commons.Contracts;
 using UltraHotel.Infrastructure.Elasticsearch;
 using UltraHotel.Infrastructure.Messaging;
 using UltraHotel.Infrastructure.Persistence;
@@ -44,9 +44,9 @@ public static class DependencyInjection
         services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 
         // Repositories
-        services.AddScoped<IUserRepository,    UserRepository>();
-        services.AddScoped<IHotelRepository,   HotelRepository>();
-        services.AddScoped<IRoomRepository,    RoomRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IHotelRepository, HotelRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
         services.AddScoped<IBookingRepository, BookingRepository>();
 
         // Elasticsearch

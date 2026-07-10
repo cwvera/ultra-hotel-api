@@ -17,7 +17,9 @@ public class GetHotelBookingsQueryHandler(
         GetHotelBookingsQuery request, CancellationToken cancellationToken)
     {
         if (!await hotelRepository.ExistsByIdAsync(request.HotelId, cancellationToken))
+        {
             throw new KeyNotFoundException($"Hotel {request.HotelId} no encontrado.");
+        }
 
         IReadOnlyList<Booking> bookings = await bookingRepository.GetByHotelIdAsync(request.HotelId, cancellationToken);
         return bookings.Adapt<IReadOnlyList<HotelBookingSummaryDto>>();

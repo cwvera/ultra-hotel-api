@@ -15,31 +15,31 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         }
         catch (ValidationException ex)
         {
-            context.Response.StatusCode  = StatusCodes.Status400BadRequest;
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Response.ContentType = "application/json";
 
             await WriteAsync(context, new
             {
                 message = "Error de validación.",
-                errors  = ex.Errors.Select(e => new { e.PropertyName, e.ErrorMessage })
+                errors = ex.Errors.Select(e => new { e.PropertyName, e.ErrorMessage })
             });
         }
         catch (UnauthorizedAccessException ex)
         {
-            context.Response.StatusCode  = StatusCodes.Status401Unauthorized;
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
             context.Response.ContentType = "application/json";
             await WriteAsync(context, new { message = ex.Message });
         }
         catch (InvalidOperationException ex)
         {
-            context.Response.StatusCode  = StatusCodes.Status409Conflict;
+            context.Response.StatusCode = StatusCodes.Status409Conflict;
             context.Response.ContentType = "application/json";
             await WriteAsync(context, new { message = ex.Message });
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error interno no controlado.");
-            context.Response.StatusCode  = StatusCodes.Status500InternalServerError;
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json";
             await WriteAsync(context, new { message = "Error interno del servidor." });
         }

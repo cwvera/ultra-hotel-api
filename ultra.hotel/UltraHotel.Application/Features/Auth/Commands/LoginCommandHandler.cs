@@ -18,7 +18,9 @@ public class LoginCommandHandler(
             ?? throw new UnauthorizedAccessException("Credenciales inválidas.");
 
         if (!passwordHasher.Verify(request.Password, user.PasswordHash))
+        {
             throw new UnauthorizedAccessException("Credenciales inválidas.");
+        }
 
         return new LoginResponse(tokenService.GenerateToken(user), user.Role.ToString().ToUpper(), user.Id);
     }

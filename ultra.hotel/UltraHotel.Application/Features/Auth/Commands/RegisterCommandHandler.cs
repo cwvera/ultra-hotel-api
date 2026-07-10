@@ -14,7 +14,9 @@ public class RegisterCommandHandler(
     public async Task Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         if (await userRepository.ExistsByEmailAsync(request.Email, cancellationToken))
+        {
             throw new InvalidOperationException("El email ya está registrado.");
+        }
 
         User user = request.Adapt<User>();
         user.PasswordHash = passwordHasher.Hash(request.Password);

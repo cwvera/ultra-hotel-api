@@ -1,13 +1,13 @@
 using Mapster;
 using MediatR;
 using Moq;
-using UltraHotel.Application.Features.Bookings.Events;
-using UltraHotel.Application.Mappings;
 using UltraHotel.Application.Features.Bookings.Commands;
 using UltraHotel.Application.Features.Bookings.Contracts;
 using UltraHotel.Application.Features.Bookings.Dtos;
+using UltraHotel.Application.Features.Bookings.Events;
 using UltraHotel.Application.Features.Hotels.Contracts;
 using UltraHotel.Application.Features.Rooms.Contracts;
+using UltraHotel.Application.Mappings;
 using UltraHotel.Domain.Entities.Bookings;
 using UltraHotel.Domain.Entities.Hotels;
 
@@ -15,18 +15,18 @@ namespace UltraHotel.Tests.Unit.Features.Bookings;
 
 public class CreateBookingCommandHandlerTests
 {
-    private readonly Mock<IRoomRepository>    _roomRepo    = new();
-    private readonly Mock<IHotelRepository>   _hotelRepo   = new();
+    private readonly Mock<IRoomRepository> _roomRepo = new();
+    private readonly Mock<IHotelRepository> _hotelRepo = new();
     private readonly Mock<IBookingRepository> _bookingRepo = new();
-    private readonly Mock<IPublisher>         _publisher   = new();
+    private readonly Mock<IPublisher> _publisher = new();
     private readonly CreateBookingCommandHandler _sut;
 
-    private static readonly DateOnly CheckIn  = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
+    private static readonly DateOnly CheckIn = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
     private static readonly DateOnly CheckOut = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7));
-    private static readonly Guid HotelId      = Guid.NewGuid();
-    private static readonly Guid RoomId       = Guid.NewGuid();
+    private static readonly Guid HotelId = Guid.NewGuid();
+    private static readonly Guid RoomId = Guid.NewGuid();
 
-    private static readonly Room  EnabledRoom  = new() { Id = RoomId, HotelId = HotelId, RoomType = RoomType.Double, BasePrice = 100m, TaxRate = 0.19m, Capacity = 2, IsEnabled = true };
+    private static readonly Room EnabledRoom = new() { Id = RoomId, HotelId = HotelId, RoomType = RoomType.Double, BasePrice = 100m, TaxRate = 0.19m, Capacity = 2, IsEnabled = true };
     private static readonly Hotel EnabledHotel = new() { Id = HotelId, Name = "H", City = "Bogotá", Address = "A", AgentEmail = "agent@test.com", IsEnabled = true };
 
     public CreateBookingCommandHandlerTests()
