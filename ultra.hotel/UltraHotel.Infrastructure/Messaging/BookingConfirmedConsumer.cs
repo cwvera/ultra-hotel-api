@@ -89,12 +89,12 @@ public sealed class BookingConfirmedConsumer(
         await base.StopAsync(cancellationToken);
         if (_channel is not null)
         {
-            await _channel.CloseAsync();
+            await _channel.CloseAsync(cancellationToken);
         }
 
         if (_connection is not null)
         {
-            await _connection.CloseAsync();
+            await _connection.CloseAsync(cancellationToken);
         }
     }
 }

@@ -29,12 +29,10 @@ internal static class AuthenticationExtensions
                 };
             });
 
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy("AdminOnly", p => p.RequireRole("ADMIN"));
-            options.AddPolicy("AgentOnly", p => p.RequireRole("AGENT"));
-            options.AddPolicy("TravelerOnly", p => p.RequireRole("TRAVELER"));
-        });
+        services.AddAuthorizationBuilder()
+            .AddPolicy("AdminOnly",    p => p.RequireRole("ADMIN"))
+            .AddPolicy("AgentOnly",    p => p.RequireRole("AGENT"))
+            .AddPolicy("TravelerOnly", p => p.RequireRole("TRAVELER"));
 
         return services;
     }
