@@ -1,0 +1,43 @@
+{
+  "index_patterns": ["hotel_*"],
+  "priority": 100,
+  "template": {
+    "settings": {
+      "number_of_shards": 4,
+      "number_of_replicas": 0,
+      "refresh_interval": "1s",
+      "index.max_result_window": 10000,
+      "analysis": {
+        "normalizer": {
+          "lowercase_normalizer": {
+            "type": "custom",
+            "filter": ["lowercase", "asciifolding"]
+          }
+        }
+      }
+    },
+    "mappings": {
+      "dynamic": "strict",
+      "_source": { "enabled": true },
+      "properties": {
+
+        "hotel_id":         { "type": "keyword" },
+        "hotel_name":       { "type": "keyword",  "index": false },
+        "city":             { "type": "keyword",  "normalizer": "lowercase_normalizer" },
+
+        "room_id":          { "type": "keyword" },
+        "room_type":        { "type": "keyword" },
+        "capacity":         { "type": "integer" },
+        "base_price":       { "type": "double",   "index": false },
+        "tax_rate":         { "type": "double",   "index": false },
+        "location_in_hotel":{ "type": "keyword",  "index": false },
+
+        "is_available":     { "type": "boolean" },
+        "hotel_enabled":    { "type": "boolean" },
+        "room_enabled":     { "type": "boolean" },
+
+        "year_month":       { "type": "keyword" }
+      }
+    }
+  }
+}
