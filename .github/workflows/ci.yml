@@ -70,7 +70,7 @@ jobs:
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.token="$SONAR_TOKEN" \
             /d:sonar.cs.opencover.reportsPaths="${{ github.workspace }}/TestResults/**/coverage.opencover.xml" \
-            /d:sonar.exclusions="**/obj/**,**/bin/**,**/Database/**,**/Migrations/**" \
+            /d:sonar.exclusions="**/obj/**,**/bin/**,**/UltraHotel.Database/**,**/Migrations/**,**/appsettings*.json" \
             /d:sonar.coverage.exclusions="$COVERAGE_EXCLUSIONS"
 
       # ── 6. Build ───────────────────────────────────────────────────────────
