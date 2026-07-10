@@ -21,15 +21,15 @@ public sealed class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
     public RabbitMqPublisher(IOptions<RabbitMqSettings> options, ILogger<RabbitMqPublisher> logger)
     {
         _settings = options.Value;
-        _logger   = logger;
+        _logger = logger;
         _pipeline = new ResiliencePipelineBuilder()
             .AddRetry(new RetryStrategyOptions
             {
                 MaxRetryAttempts = 3,
-                Delay            = TimeSpan.FromSeconds(2),
-                BackoffType      = DelayBackoffType.Exponential,
-                ShouldHandle     = args => ValueTask.FromResult(args.Outcome.Exception is not null),
-                OnRetry          = args =>
+                Delay = TimeSpan.FromSeconds(2),
+                BackoffType = DelayBackoffType.Exponential,
+                ShouldHandle = args => ValueTask.FromResult(args.Outcome.Exception is not null),
+                OnRetry = args =>
                 {
                     _logger.LogWarning("RabbitMQ publish retry #{Attempt} — {Exception}",
                         args.AttemptNumber + 1, args.Outcome.Exception?.Message);
@@ -42,29 +42,35 @@ public sealed class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
 
     private async Task EnsureChannelAsync(CancellationToken ct)
     {
-        if (_channel is { IsOpen: true }) return;
+        if (_channel is { IsOpen: true })
+        {
+            return;
+        }
 
         await _initLock.WaitAsync(ct);
         try
         {
-            if (_channel is { IsOpen: true }) return;
+            if (_channel is { IsOpen: true })
+            {
+                return;
+            }
 
             if (_channel is not null) { try { await _channel.CloseAsync(); } catch { /* stale */ } }
             if (_connection is not null) { try { await _connection.CloseAsync(); } catch { /* stale */ } }
-            _channel    = null;
+            _channel = null;
             _connection = null;
 
             ConnectionFactory factory = new()
             {
-                HostName    = _settings.Host,
-                Port        = _settings.Port,
-                UserName    = _settings.Username,
-                Password    = _settings.Password,
+                HostName = _settings.Host,
+                Port = _settings.Port,
+                UserName = _settings.Username,
+                Password = _settings.Password,
                 VirtualHost = _settings.VirtualHost
             };
 
             _connection = await factory.CreateConnectionAsync(ct);
-            _channel    = await _connection.CreateChannelAsync(cancellationToken: ct);
+            _channel = await _connection.CreateChannelAsync(cancellationToken: ct);
 
             _logger.LogInformation("RabbitMQ connected to {Host}:{Port}", _settings.Host, _settings.Port);
         }
@@ -84,7 +90,7 @@ public sealed class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
             await _channel!.QueueDeclareAsync(queue, durable: true, exclusive: false,
                 autoDelete: false, cancellationToken: innerCt);
 
-            byte[]          body  = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
+            byte[] body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
             BasicProperties props = new() { Persistent = true };
 
             await _channel.BasicPublishAsync(exchange: string.Empty, routingKey: queue,
@@ -97,7 +103,14 @@ public sealed class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
-        if (_channel is not null) await _channel.CloseAsync();
-        if (_connection is not null) await _connection.CloseAsync();
+        if (_channel is not null)
+        {
+            await _channel.CloseAsync();
+        }
+
+        if (_connection is not null)
+        {
+            await _connection.CloseAsync();
+        }
     }
 }

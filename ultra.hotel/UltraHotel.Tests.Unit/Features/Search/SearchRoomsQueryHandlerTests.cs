@@ -1,6 +1,6 @@
 using Moq;
-using UltraHotel.Application.Features.Search.Contracts;
 using UltraHotel.Application.Features.Bookings.Contracts;
+using UltraHotel.Application.Features.Search.Contracts;
 using UltraHotel.Application.Features.Search.Dtos;
 using UltraHotel.Application.Features.Search.Queries;
 
@@ -8,11 +8,11 @@ namespace UltraHotel.Tests.Unit.Features.Search;
 
 public class SearchRoomsQueryHandlerTests
 {
-    private readonly Mock<IElasticsearchService> _es          = new();
-    private readonly Mock<IBookingRepository>    _bookingRepo = new();
-    private readonly SearchRoomsQueryHandler     _sut;
+    private readonly Mock<IElasticsearchService> _es = new();
+    private readonly Mock<IBookingRepository> _bookingRepo = new();
+    private readonly SearchRoomsQueryHandler _sut;
 
-    private static readonly DateOnly CheckIn  = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3));
+    private static readonly DateOnly CheckIn = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(3));
     private static readonly DateOnly CheckOut = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
 
     public SearchRoomsQueryHandlerTests()

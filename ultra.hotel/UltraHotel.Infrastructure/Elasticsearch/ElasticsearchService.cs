@@ -25,10 +25,10 @@ public class ElasticsearchService : IElasticsearchService
             .AddRetry(new RetryStrategyOptions
             {
                 MaxRetryAttempts = 3,
-                Delay            = TimeSpan.FromSeconds(2),
-                BackoffType      = DelayBackoffType.Exponential,
-                ShouldHandle     = args => ValueTask.FromResult(args.Outcome.Exception is not null),
-                OnRetry          = args =>
+                Delay = TimeSpan.FromSeconds(2),
+                BackoffType = DelayBackoffType.Exponential,
+                ShouldHandle = args => ValueTask.FromResult(args.Outcome.Exception is not null),
+                OnRetry = args =>
                 {
                     _logger.LogWarning("Elasticsearch retry #{Attempt} — {Exception}",
                         args.AttemptNumber + 1, args.Outcome.Exception?.Message);
@@ -50,8 +50,10 @@ public class ElasticsearchService : IElasticsearchService
                     document, i => i.Index(index).Id(document.RoomId), innerCt);
 
                 if (!response.IsValidResponse)
+                {
                     throw new InvalidOperationException(
                         response.ElasticsearchServerError?.ToString() ?? "Index failed");
+                }
             }, ct);
         }
         catch (Exception ex)
@@ -82,8 +84,10 @@ public class ElasticsearchService : IElasticsearchService
                     .Size(200), innerCt);
 
                 if (!response.IsValidResponse)
+                {
                     throw new InvalidOperationException(
                         response.ElasticsearchServerError?.ToString() ?? "Search failed");
+                }
 
                 return (IReadOnlyList<RoomSearchResult>)response.Documents
                     .Select(d => new RoomSearchResult(
@@ -121,8 +125,10 @@ public class ElasticsearchService : IElasticsearchService
                     innerCt);
 
                 if (!response.IsValidResponse)
+                {
                     throw new InvalidOperationException(
                         response.ElasticsearchServerError?.ToString() ?? "Delete failed");
+                }
             }, ct);
         }
         catch (Exception ex)

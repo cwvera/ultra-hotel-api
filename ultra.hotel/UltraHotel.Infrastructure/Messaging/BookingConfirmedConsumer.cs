@@ -26,15 +26,15 @@ public sealed class BookingConfirmedConsumer(
         {
             ConnectionFactory factory = new()
             {
-                HostName    = options.Value.Host,
-                Port        = options.Value.Port,
-                UserName    = options.Value.Username,
-                Password    = options.Value.Password,
+                HostName = options.Value.Host,
+                Port = options.Value.Port,
+                UserName = options.Value.Username,
+                Password = options.Value.Password,
                 VirtualHost = options.Value.VirtualHost
             };
 
             _connection = await factory.CreateConnectionAsync(stoppingToken);
-            _channel    = await _connection.CreateChannelAsync(cancellationToken: stoppingToken);
+            _channel = await _connection.CreateChannelAsync(cancellationToken: stoppingToken);
 
             await _channel.QueueDeclareAsync(Queue, durable: true, exclusive: false,
                 autoDelete: false, cancellationToken: stoppingToken);
@@ -60,7 +60,7 @@ public sealed class BookingConfirmedConsumer(
     {
         try
         {
-            string                  json    = Encoding.UTF8.GetString(ea.Body.Span);
+            string json = Encoding.UTF8.GetString(ea.Body.Span);
             BookingConfirmedMessage? message = JsonSerializer.Deserialize<BookingConfirmedMessage>(json);
 
             if (message is null)
@@ -69,8 +69,8 @@ public sealed class BookingConfirmedConsumer(
                 return;
             }
 
-            using IServiceScope scope   = scopeFactory.CreateScope();
-            IEmailService emailService  = scope.ServiceProvider.GetRequiredService<IEmailService>();
+            using IServiceScope scope = scopeFactory.CreateScope();
+            IEmailService emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
 
             await emailService.SendBookingConfirmationAsync(message);
 
@@ -87,7 +87,14 @@ public sealed class BookingConfirmedConsumer(
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
         await base.StopAsync(cancellationToken);
-        if (_channel is not null) await _channel.CloseAsync();
-        if (_connection is not null) await _connection.CloseAsync();
+        if (_channel is not null)
+        {
+            await _channel.CloseAsync();
+        }
+
+        if (_connection is not null)
+        {
+            await _connection.CloseAsync();
+        }
     }
 }

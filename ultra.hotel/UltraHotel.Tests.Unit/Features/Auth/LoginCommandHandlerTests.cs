@@ -8,10 +8,10 @@ namespace UltraHotel.Tests.Unit.Features.Auth;
 
 public class LoginCommandHandlerTests
 {
-    private readonly Mock<IUserRepository> _userRepo     = new();
-    private readonly Mock<ITokenService>   _tokenService = new();
-    private readonly Mock<IPasswordHasher> _hasher       = new();
-    private readonly LoginCommandHandler   _sut;
+    private readonly Mock<IUserRepository> _userRepo = new();
+    private readonly Mock<ITokenService> _tokenService = new();
+    private readonly Mock<IPasswordHasher> _hasher = new();
+    private readonly LoginCommandHandler _sut;
 
     public LoginCommandHandlerTests()
     {

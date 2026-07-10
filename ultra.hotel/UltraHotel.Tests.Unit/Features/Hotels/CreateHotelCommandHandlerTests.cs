@@ -1,16 +1,16 @@
 using Mapster;
 using Moq;
-using UltraHotel.Application.Mappings;
 using UltraHotel.Application.Features.Hotels.Commands;
 using UltraHotel.Application.Features.Hotels.Contracts;
 using UltraHotel.Application.Features.Hotels.Dtos;
+using UltraHotel.Application.Mappings;
 using UltraHotel.Domain.Entities.Hotels;
 
 namespace UltraHotel.Tests.Unit.Features.Hotels;
 
 public class CreateHotelCommandHandlerTests
 {
-    private readonly Mock<IHotelRepository>    _repo = new();
+    private readonly Mock<IHotelRepository> _repo = new();
     private readonly CreateHotelCommandHandler _sut;
 
     public CreateHotelCommandHandlerTests()

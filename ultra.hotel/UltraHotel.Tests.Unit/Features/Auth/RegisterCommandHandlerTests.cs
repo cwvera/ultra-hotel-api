@@ -1,8 +1,8 @@
 using Mapster;
 using Moq;
-using UltraHotel.Application.Mappings;
 using UltraHotel.Application.Features.Auth.Commands;
 using UltraHotel.Application.Features.Auth.Contracts;
+using UltraHotel.Application.Mappings;
 using UltraHotel.Domain.Entities.Identity;
 
 namespace UltraHotel.Tests.Unit.Features.Auth;
@@ -10,7 +10,7 @@ namespace UltraHotel.Tests.Unit.Features.Auth;
 public class RegisterCommandHandlerTests
 {
     private readonly Mock<IUserRepository> _userRepo = new();
-    private readonly Mock<IPasswordHasher> _hasher   = new();
+    private readonly Mock<IPasswordHasher> _hasher = new();
     private readonly RegisterCommandHandler _sut;
 
     public RegisterCommandHandlerTests()

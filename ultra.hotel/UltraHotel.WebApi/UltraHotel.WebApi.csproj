@@ -20,22 +20,5 @@
     <ProjectReference Include="..\UltraHotel.Infrastructure\UltraHotel.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Program.ApiVersioning.cs">
-      <DependentUpon>Program.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Program.Authentication.cs">
-      <DependentUpon>Program.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Program.Swagger.cs">
-      <DependentUpon>Program.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Program.RateLimiting.cs">
-      <DependentUpon>Program.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Program.Cors.cs">
-      <DependentUpon>Program.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
 
 </Project>

@@ -1,28 +1,30 @@
 using Microsoft.OpenApi;
 
-partial class Program
+namespace UltraHotel.WebApi.Extensions;
+
+internal static class SwaggerExtensions
 {
-    private static void ConfigureSwagger(IServiceCollection services)
+    internal static IServiceCollection AddHotelSwagger(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title       = "UltraHotel API",
-                Version     = "v1",
-                Description = "API de gestión y reserva de hoteles — UltraGroup Tech.",
-                Contact     = new OpenApiContact { Name = "UltraGroup", Email = "dev@ultragroup.com" }
+                Title = "UltraHotel API",
+                Version = "v1",
+                Description = "API de gestión y reserva de hoteles — Ultra Hotel Tech.",
+                Contact = new OpenApiContact { Name = "UltraHotel", Email = "dev@ultrahotel.com" }
             });
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Name         = "Authorization",
-                Type         = SecuritySchemeType.ApiKey,
-                Scheme       = "Bearer",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
                 BearerFormat = "JWT",
-                In           = ParameterLocation.Header,
-                Description  = "Introduce el JWT obtenido en /auth/login. Formato: Bearer {token}"
+                In = ParameterLocation.Header,
+                Description = "Introduce el JWT obtenido en /auth/login. Formato: Bearer {token}"
             });
 
             options.AddSecurityRequirement(doc => new OpenApiSecurityRequirement
@@ -31,13 +33,22 @@ partial class Program
             });
 
             string webApiXml = Path.Combine(AppContext.BaseDirectory, "UltraHotel.WebApi.xml");
-            string appXml    = Path.Combine(AppContext.BaseDirectory, "UltraHotel.Application.xml");
-            if (File.Exists(webApiXml)) options.IncludeXmlComments(webApiXml);
-            if (File.Exists(appXml))    options.IncludeXmlComments(appXml);
+            string appXml = Path.Combine(AppContext.BaseDirectory, "UltraHotel.Application.xml");
+            if (File.Exists(webApiXml))
+            {
+                options.IncludeXmlComments(webApiXml);
+            }
+
+            if (File.Exists(appXml))
+            {
+                options.IncludeXmlComments(appXml);
+            }
         });
+
+        return services;
     }
 
-    private static void UseSwagger(WebApplication app)
+    internal static WebApplication UseHotelSwagger(this WebApplication app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(options =>
@@ -50,5 +61,7 @@ partial class Program
             options.EnableFilter();
             options.EnableTryItOutByDefault();
         });
+
+        return app;
     }
 }
