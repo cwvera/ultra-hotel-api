@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build-test-analyze:
+    name: Build · Test · Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Source ──────────────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # Required: SonarCloud uses full git history for blame & new-code detection
+
+      # ── 2. Runtimes ────────────────────────────────────────────────────────
+      - name: Setup Java 21
+        uses: actions/setup-java@v4  # Java is required by the SonarScanner process
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # ── 3. Tools ───────────────────────────────────────────────────────────
+      - name: Install dotnet-sonarscanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      # ── 4. Dependencies ────────────────────────────────────────────────────
+      - name: Restore
+        run: dotnet restore ultra.hotel/ultra.hotel.sln
+
+      # ── 5. SonarCloud Begin ────────────────────────────────────────────────
+      #   Must run BEFORE build so MSBuild hooks capture compiler diagnostics.
+      #   GITHUB_TOKEN enables automatic PR decoration in SonarCloud.
+      - name: SonarCloud Begin
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Files excluded from COVERAGE metrics (no business logic, no value in measuring).
+          # Does NOT exclude them from static analysis — Domain/Application/Infrastructure remain fully analyzed.
+          COVERAGE_EXCLUSIONS="\
+            **/Controllers/**,\
+            **/Middleware/**,\
+            **/Program*.cs,\
+            **/Mappings/**,\
+            **/Configurations/**,\
+            **/Migrations/**,\
+            **/Extensions/**,\
+            **/*Dto.cs,\
+            **/*Request.cs,\
+            **/*Response.cs,\
+            **/*Record.cs,\
+            **/*Options.cs,\
+            **/*Constants.cs"
+
+          dotnet sonarscanner begin \
+            /k:"cwvera_ultra-hotel-api" \
+            /o:"cwvera" \
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.token="$SONAR_TOKEN" \
+            /d:sonar.cs.opencover.reportsPaths="${{ github.workspace }}/TestResults/**/coverage.opencover.xml" \
+            /d:sonar.exclusions="**/obj/**,**/bin/**,**/Database/**,**/Migrations/**" \
+            /d:sonar.coverage.exclusions="$COVERAGE_EXCLUSIONS"
+
+      # ── 6. Build ───────────────────────────────────────────────────────────
+      - name: Build
+        run: dotnet build ultra.hotel/ultra.hotel.sln --no-restore --configuration Release
+
+      # ── 7. Test + Coverage ─────────────────────────────────────────────────
+      #   coverlet.collector (already in Tests.Unit.csproj) generates opencover XML.
+      #   Output lands in TestResults/{guid}/coverage.opencover.xml — matched by the glob above.
+      - name: Test with coverage
+        run: |
+          dotnet test ultra.hotel/ultra.hotel.sln \
+            --no-build \
+            --configuration Release \
+            --collect:"XPlat Code Coverage" \
+            --results-directory "${{ github.workspace }}/TestResults" \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+
+      # ── 8. SonarCloud End ──────────────────────────────────────────────────
+      #   Sends analysis results and coverage report to SonarCloud.
+      - name: SonarCloud End
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"

@@ -1,0 +1,17 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- Pin language version to latest C# across all projects -->
+    <LangVersion>latest</LangVersion>
+
+    <!-- Reproducible builds: byte-for-byte identical output regardless of machine -->
+    <Deterministic>true</Deterministic>
+
+    <!-- Embeds untracked source files into PDBs for accurate coverage source linking -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <!-- Enables source link for NuGet packages (useful for debugging) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+</Project>

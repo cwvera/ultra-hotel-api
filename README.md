@@ -2,6 +2,10 @@
 
 Backend de reservas hoteleras desarrollado en **.NET 10**. Gestiona hoteles, habitaciones y reservas con búsqueda en Elasticsearch, notificaciones asíncronas vía RabbitMQ y autenticación JWT por roles.
 
+[![CI](https://github.com/cwvera/ultra-hotel-api/actions/workflows/ci.yml/badge.svg)](https://github.com/cwvera/ultra-hotel-api/actions/workflows/ci.yml)
+
+Análisis estático, cobertura y vulnerabilidades: https://sonarcloud.io/project/overview?id=cwvera_ultra-hotel-api
+
 ## TECNOLOGÍAS UTILIZADAS
 
 .NET 10 - ASP.NET Core Web API - SQL Server 2022 - Elasticsearch 9 - RabbitMQ 3 - CQRS (MediatR 14) - FluentValidation - Mapster - Polly - BCrypt - JWT - Swagger / Scalar - Docker / Docker Compose
