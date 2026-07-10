@@ -9,7 +9,7 @@ public class LogEmailServiceTests
     private readonly LogEmailService _sut = new(NullLogger<LogEmailService>.Instance);
 
     [Fact]
-    public async Task SendBookingConfirmationAsync_ValidMessage_ReturnsCompletedTask()
+    public async Task SendBookingConfirmationAsync_ValidMessage_ReturnsCompletedSuccessfully()
     {
         BookingConfirmedMessage message = new(
             BookingId: Guid.NewGuid(),
@@ -21,6 +21,8 @@ public class LogEmailServiceTests
             CheckOut: new DateOnly(2025, 6, 5),
             TotalPrice: 400m);
 
-        await _sut.SendBookingConfirmationAsync(message);
+        Task task = _sut.SendBookingConfirmationAsync(message);
+
+        Assert.True(task.IsCompletedSuccessfully);
     }
 }
