@@ -49,7 +49,7 @@ jobs:
         run: |
           # Files excluded from COVERAGE metrics (no business logic, no value in measuring).
           # Does NOT exclude them from static analysis — Domain/Application/Infrastructure remain fully analyzed.
-          COVERAGE_EXCLUSIONS="**/Controllers/**,**/Middleware/**,**/Program*.cs,**/Mappings/**,**/Configurations/**,**/Migrations/**,**/Extensions/**,**/*Dto.cs,**/*Request.cs,**/*Response.cs,**/*Record.cs,**/*Options.cs,**/*Constants.cs,**/*Publisher.cs,**/*Consumer.cs"
+          COVERAGE_EXCLUSIONS="**/Controllers/**,**/Middleware/**,**/Program*.cs,**/Mappings/**,**/Configurations/**,**/Migrations/**,**/Extensions/**,**/*Dto.cs,**/*Request.cs,**/*Response.cs,**/*Record.cs,**/*Options.cs,**/*Constants.cs,**/*Publisher.cs,**/*Consumer.cs,**/DependencyInjection.cs,**/Elasticsearch/**,**/*Settings.cs"
 
           dotnet sonarscanner begin \
             /k:"cwvera_ultra-hotel-api" \

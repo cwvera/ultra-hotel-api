@@ -9,8 +9,9 @@ public partial class LogEmailService(ILogger<LogEmailService> logger) : IEmailSe
     /// <inheritdoc/>
     public Task SendBookingConfirmationAsync(BookingConfirmedMessage message, CancellationToken ct = default)
     {
-        LogEmailSent(logger, message.GuestEmail, message.GuestName, message.HotelName,
-            message.RoomType, $"{message.CheckIn:d} → {message.CheckOut:d}", message.TotalPrice);
+        if (logger.IsEnabled(LogLevel.Information))
+            LogEmailSent(logger, message.GuestEmail, message.GuestName, message.HotelName,
+                message.RoomType, $"{message.CheckIn:d} → {message.CheckOut:d}", message.TotalPrice);
 
         return Task.CompletedTask;
     }
