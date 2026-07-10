@@ -9,7 +9,7 @@ using UltraHotel.Commons.Contracts;
 
 namespace UltraHotel.Infrastructure.Messaging;
 
-public sealed class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
+public sealed partial class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
 {
     private readonly ILogger<RabbitMqPublisher> _logger;
     private readonly RabbitMqSettings _settings;
@@ -72,7 +72,7 @@ public sealed class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
             _connection = await factory.CreateConnectionAsync(ct);
             _channel = await _connection.CreateChannelAsync(cancellationToken: ct);
 
-            _logger.LogInformation("RabbitMQ connected to {Host}:{Port}", _settings.Host, _settings.Port);
+            LogConnected(_logger, _settings.Host, _settings.Port);
         }
         finally
         {
@@ -96,9 +96,15 @@ public sealed class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
             await _channel.BasicPublishAsync(exchange: string.Empty, routingKey: queue,
                 mandatory: false, basicProperties: props, body: body, cancellationToken: innerCt);
 
-            _logger.LogInformation("Published message to queue '{Queue}'", queue);
+            LogPublished(_logger, queue);
         }, ct);
     }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "RabbitMQ connected to {Host}:{Port}")]
+    private static partial void LogConnected(ILogger logger, string host, int port);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Published message to queue '{Queue}'")]
+    private static partial void LogPublished(ILogger logger, string queue);
 
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
