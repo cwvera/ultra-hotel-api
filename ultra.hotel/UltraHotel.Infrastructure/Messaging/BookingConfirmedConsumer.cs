@@ -11,7 +11,7 @@ using UltraHotel.Commons.Messaging;
 
 namespace UltraHotel.Infrastructure.Messaging;
 
-public sealed class BookingConfirmedConsumer(
+public sealed partial class BookingConfirmedConsumer(
     IOptions<RabbitMqSettings> options,
     IServiceScopeFactory scopeFactory,
     ILogger<BookingConfirmedConsumer> logger) : BackgroundService
@@ -45,14 +45,14 @@ public sealed class BookingConfirmedConsumer(
             await _channel.BasicConsumeAsync(Queue, autoAck: false, consumer: consumer,
                 cancellationToken: stoppingToken);
 
-            logger.LogInformation("BookingConfirmedConsumer listening on queue '{Queue}'", Queue);
+            LogConsumerStarted(logger, Queue);
 
             await Task.Delay(Timeout.Infinite, stoppingToken);
         }
         catch (OperationCanceledException) { /* shutdown */ }
         catch (Exception ex)
         {
-            logger.LogError(ex, "BookingConfirmedConsumer fatal error");
+            LogFatalError(logger, ex);
         }
     }
 
@@ -75,11 +75,11 @@ public sealed class BookingConfirmedConsumer(
             await emailService.SendBookingConfirmationAsync(message);
 
             await _channel!.BasicAckAsync(ea.DeliveryTag, false);
-            logger.LogInformation("Booking confirmation email sent to {Email}", message.GuestEmail);
+            LogConfirmationSent(logger, message.GuestEmail);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to process booking confirmed message");
+            LogProcessingError(logger, ex);
             await _channel!.BasicNackAsync(ea.DeliveryTag, false, requeue: true);
         }
     }
@@ -87,6 +87,7 @@ public sealed class BookingConfirmedConsumer(
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
         await base.StopAsync(cancellationToken);
+
         if (_channel is not null)
         {
             await _channel.CloseAsync(cancellationToken);
@@ -97,4 +98,16 @@ public sealed class BookingConfirmedConsumer(
             await _connection.CloseAsync(cancellationToken);
         }
     }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "BookingConfirmedConsumer listening on queue '{Queue}'")]
+    private static partial void LogConsumerStarted(ILogger logger, string queue);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Booking confirmation email sent to {Email}")]
+    private static partial void LogConfirmationSent(ILogger logger, string email);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "BookingConfirmedConsumer fatal error")]
+    private static partial void LogFatalError(ILogger logger, Exception ex);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Failed to process booking confirmed message")]
+    private static partial void LogProcessingError(ILogger logger, Exception ex);
 }

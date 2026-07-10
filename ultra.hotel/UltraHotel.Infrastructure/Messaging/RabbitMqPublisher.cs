@@ -55,8 +55,8 @@ public sealed class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
                 return;
             }
 
-            if (_channel is not null) { try { await _channel.CloseAsync(); } catch { /* stale */ } }
-            if (_connection is not null) { try { await _connection.CloseAsync(); } catch { /* stale */ } }
+            if (_channel is not null) { try { await _channel.CloseAsync(ct); } catch { /* stale */ } }
+            if (_connection is not null) { try { await _connection.CloseAsync(ct); } catch { /* stale */ } }
             _channel = null;
             _connection = null;
 
@@ -105,12 +105,12 @@ public sealed class RabbitMqPublisher : IMessagePublisher, IAsyncDisposable
     {
         if (_channel is not null)
         {
-            await _channel.CloseAsync();
+            await _channel.CloseAsync(CancellationToken.None);
         }
 
         if (_connection is not null)
         {
-            await _connection.CloseAsync();
+            await _connection.CloseAsync(CancellationToken.None);
         }
     }
 }
