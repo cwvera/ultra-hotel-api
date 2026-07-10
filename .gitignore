@@ -1,0 +1,95 @@
+# ============================================================
+# CONFIGURACIÓN LOCAL
+# Nota: .env se incluye en el repo intencionalmente para que
+# el evaluador pueda ejecutar `docker compose up` sin configuración
+# adicional. En un proyecto real estas credenciales irían en un
+# gestor de secretos y .env estaría en este bloque.
+# ============================================================
+.env.*
+!.env.example
+appsettings.Local.json
+appsettings.*.Local.json
+
+# ============================================================
+# ARTEFACTOS DE BUILD
+# ============================================================
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+[Oo]ut/
+artifacts/
+
+# ============================================================
+# VISUAL STUDIO
+# ============================================================
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.cache
+*.sln.docstates
+[Tt]emp/
+[Tt]emporary/
+
+# ============================================================
+# RIDER / JETBRAINS
+# ============================================================
+.idea/
+*.sln.iml
+
+# ============================================================
+# VSCODE
+# ============================================================
+.vscode/
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# ============================================================
+# NUGET
+# ============================================================
+packages/
+*.nupkg
+*.snupkg
+.nuget/
+nuget.config.local
+
+# ============================================================
+# PRUEBAS
+# ============================================================
+[Tt]est[Rr]esults/
+*.trx
+*.coverage
+coverage*/
+*.coveragexml
+BenchmarkDotNet.Artifacts/
+
+# ============================================================
+# LOGS Y DATOS TEMPORALES
+# ============================================================
+*.log
+logs/
+*.tmp
+*.temp
+
+# ============================================================
+# SISTEMA OPERATIVO
+# ============================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+# ============================================================
+# DOCKER — se excluyen datos persistidos en volúmenes locales
+# ============================================================
+docker-data/
+mssql-data/
+rabbitmq-data/
+elasticsearch-data/
+
+# ============================================================
+# ARCHIVOS LOCALES / TEMPORALES DE ESTE PROYECTO
+# ============================================================
+prueba.pdf

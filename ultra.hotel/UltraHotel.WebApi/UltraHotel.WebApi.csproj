@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc" Version="10.0.0" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UltraHotel.Application\UltraHotel.Application.csproj" />
+    <ProjectReference Include="..\UltraHotel.Infrastructure\UltraHotel.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Program.ApiVersioning.cs">
+      <DependentUpon>Program.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Program.Authentication.cs">
+      <DependentUpon>Program.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Program.Swagger.cs">
+      <DependentUpon>Program.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Program.RateLimiting.cs">
+      <DependentUpon>Program.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Program.Cors.cs">
+      <DependentUpon>Program.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>
